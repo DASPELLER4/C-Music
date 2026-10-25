@@ -5,6 +5,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+// https://stackoverflow.com/questions/427477/fastest-way-to-clamp-a-real-fixed-floating-point-value
+float clamp(float d, float min, float max) {
+	const float t = d < min ? min : d;
+	return t > max ? max : t;
+}
+
 int exportWAV(char *fileName, sample_t *sample){
 	FILE *file = fopen(fileName, "w");
 	if(file == NULL){
@@ -35,7 +41,7 @@ int exportWAV(char *fileName, sample_t *sample){
 	uint32_t dataSize = totalSamples*channels;
 	fwrite(&dataSize, 4, 1, file);
 	for(uint64_t i = 0; i < sample->length; i++){
-		int16_t data = (int16_t)(32676.0 * sample->samples[i]);
+		int16_t data = (int16_t)(32676.0 * clamp(sample->samples[i], -1.0, 1.0));
 		fwrite(&data, 2, 1, file);
 		data = 0; // samples are mono
 		fwrite(&data, 2, 1, file);
