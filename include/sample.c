@@ -37,6 +37,17 @@ sample_t *newSineSample(float duration, float frequency){
 	return result;
 }
 
+sample_t *normalizeSample(sample_t *sample){
+	float max = 0.0;
+	for(uint64_t i = 0; i < sample->length; i++){
+		if(sample->samples[i] > max)
+			max = sample->samples[i];
+		else if(sample->samples[i] < -max)
+			max = -sample->samples[i];
+	}
+	return amplifySample(sample, (1.0/max));
+}
+
 sample_t *amplifySample(sample_t *sample, float amplitude){
 	for(uint64_t i = 0; i < sample->length; i++){
 		sample->samples[i] *= amplitude;

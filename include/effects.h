@@ -11,4 +11,8 @@ sample_t *limiter_sample(sample_t *, float);
 	sample_t * : amplifySample\
 )(data,value)
 
+#define normalize(data) _Generic((data),\
+	sample_t * : normalizeSample\
+)(data)
+
 #endif
